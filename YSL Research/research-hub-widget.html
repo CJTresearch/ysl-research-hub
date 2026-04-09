@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Research Hub</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: #f5f5f3;
+      color: #1a1a1a;
+      padding: 2rem 1rem;
+      min-height: 100vh;
+    }
+
+    .rh-wrapper {
+      max-width: 780px;
+      margin: 0 auto;
+    }
+
+    .rh-header-top {
+      margin-bottom: 1.75rem;
+    }
+
+    .rh-header-top h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 28px;
+      font-weight: 400;
+      color: #1a1a1a;
+      margin-bottom: 4px;
+    }
+
+    .rh-header-top p {
+      font-size: 14px;
+      color: #888;
+    }
+
+    .rh-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .rh-tab {
+      padding: 8px 20px;
+      border-radius: 99px;
+      border: 1px solid #ddd;
+      background: transparent;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      font-family: 'DM Sans', sans-serif;
+      color: #666;
+      transition: all 0.15s;
+    }
+
+    .rh-tab:hover {
+      background: #efefed;
+      color: #1a1a1a;
+    }
+
+    .rh-tab.active {
+      background: #1a1a1a;
+      color: #fff;
+      border-color: #1a1a1a;
+    }
+
+    .rh-card {
+      background: #fff;
+      border: 1px solid #e8e8e6;
+      border-radius: 16px;
+      padding: 1.75rem;
+      display: none;
+    }
+
+    .rh-card.visible { display: block; }
+
+    .rh-card-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .rh-title-block { flex: 1; min-width: 200px; }
+
+    .rh-ticker {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      color: #999;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .rh-name {
+      font-family: 'DM Serif Display', serif;
+      font-size: 28px;
+      font-weight: 400;
+      color: #1a1a1a;
+      margin-bottom: 8px;
+      line-height: 1.2;
+    }
+
+    .rh-tagline {
+      font-size: 14px;
+      color: #666;
+      line-height: 1.6;
+      max-width: 420px;
+    }
+
+    .rh-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+
+    .rh-price-block { text-align: right; }
+
+    .rh-price {
+      font-size: 24px;
+      font-weight: 500;
+      color: #1a1a1a;
+      line-height: 1.2;
+      min-height: 29px;
+    }
+
+    .rh-change {
+      font-size: 13px;
+      font-weight: 500;
+      margin-top: 3px;
+    }
+
+    .rh-change.up { color: #16a34a; }
+    .rh-change.down { color: #dc2626; }
+    .rh-change.neutral { color: #aaa; }
+
+    .rh-price-updated {
+      font-size: 11px;
+      color: #bbb;
+      margin-top: 3px;
+    }
+
+    .rh-links {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .rh-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 12px;
+      font-weight: 500;
+      font-family: 'DM Sans', sans-serif;
+      padding: 5px 12px;
+      border-radius: 99px;
+      border: 1px solid #e0e0de;
+      color: #666;
+      text-decoration: none;
+      transition: all 0.15s;
+      background: #f8f8f6;
+    }
+
+    .rh-link:hover {
+      color: #1a1a1a;
+      border-color: #bbb;
+      background: #f0f0ee;
+    }
+
+    .rh-link-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      display: inline-block;
+      flex-shrink: 0;
+    }
+
+    .rh-divider {
+      border: none;
+      border-top: 1px solid #f0f0ee;
+      margin: 1.25rem 0;
+    }
+
+    .rh-section-label {
+      font-size: 11px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #bbb;
+      margin-bottom: 10px;
+    }
+
+    .rh-contracts { margin-bottom: 0; }
+
+    .rh-contract-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+    }
+
+    .rh-network-badge {
+      font-size: 11px;
+      font-weight: 500;
+      padding: 3px 10px;
+      border-radius: 4px;
+      white-space: nowrap;
+      background: #f5f5f3;
+      color: #666;
+      border: 1px solid #e8e8e6;
+      flex-shrink: 0;
+    }
+
+    .rh-address {
+      font-family: 'Courier New', monospace;
+      font-size: 11px;
+      color: #aaa;
+      word-break: break-all;
+      line-height: 1.7;
+      padding-top: 3px;
+    }
+
+    .rh-questions { display: flex; flex-direction: column; gap: 6px; }
+
+    .rh-q-btn {
+      text-align: left;
+      padding: 12px 16px;
+      border: 1px solid #e0e0de;
+      border-radius: 10px;
+      background: #f8f8f6;
+      cursor: pointer;
+      font-size: 13px;
+      font-family: 'DM Sans', sans-serif;
+      color: #1a1a1a;
+      transition: all 0.15s;
+      line-height: 1.4;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      width: 100%;
+    }
+
+    .rh-q-btn:hover {
+      background: #fff;
+      border-color: #bbb;
+    }
+
+    .rh-q-btn.active {
+      background: #fff;
+      border-color: #bbb;
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+      border-bottom-color: transparent;
+    }
+
+    .rh-q-arrow {
+      font-size: 16px;
+      color: #ccc;
+      transition: transform 0.2s;
+      flex-shrink: 0;
+      line-height: 1;
+    }
+
+    .rh-q-btn.active .rh-q-arrow { transform: rotate(90deg); }
+
+    .rh-answer {
+      display: none;
+      padding: 14px 16px;
+      border: 1px solid #bbb;
+      border-top: none;
+      border-radius: 0 0 10px 10px;
+      background: #fff;
+      font-size: 13px;
+      line-height: 1.7;
+      color: #555;
+      margin-top: -1px;
+    }
+
+    .rh-answer.visible { display: block; }
+
+    .rh-answer p { margin: 0 0 10px; }
+    .rh-answer p:last-child { margin-bottom: 0; }
+    .rh-answer strong { font-weight: 500; color: #1a1a1a; }
+
+    .rh-disclaimer {
+      margin-top: 1.5rem;
+      font-size: 11px;
+      color: #bbb;
+      line-height: 1.6;
+      text-align: center;
+    }
+
+    .rh-skeleton {
+      display: inline-block;
+      width: 100px;
+      height: 24px;
+      background: linear-gradient(90deg, #f0f0ee 25%, #e8e8e6 50%, #f0f0ee 75%);
+      background-size: 200% 100%;
+      border-radius: 4px;
+      animation: shimmer 1.4s ease-in-out infinite;
+      vertical-align: middle;
+    }
+
+    @keyframes shimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    @media (max-width: 560px) {
+      .rh-card-header { flex-direction: column; }
+      .rh-right { align-items: flex-start; }
+      .rh-links { justify-content: flex-start; }
+      .rh-price-block { text-align: left; }
+    }
+  </style>
+</head>
+<body>
+  <div class="rh-wrapper">
+
+    <div class="rh-header-top">
+      <h1>Research Hub</h1>
+      <p>Curated digital asset research for our members. Prices update every 60 seconds.</p>
+    </div>
+
+    <div class="rh-tabs">
+      <button class="rh-tab active" onclick="showAsset('btc', this)">BTC</button>
+      <button class="rh-tab" onclick="showAsset('eth', this)">ETH</button>
+      <button class="rh-tab" onclick="showAsset('sol', this)">SOL</button>
+      <button class="rh-tab" onclick="showAsset('hype', this)">HYPE</button>
+    </div>
+
+    <!-- BTC -->
+    <div id="card-btc" class="rh-card visible">
+      <div class="rh-card-header">
+        <div class="rh-title-block">
+          <div class="rh-ticker">BTC</div>
+          <h2 class="rh-name">Bitcoin</h2>
+          <div class="rh-tagline">The original decentralized digital currency — a scarce, borderless store of value secured by the world's largest proof-of-work network.</div>
+        </div>
+        <div class="rh-right">
+          <div class="rh-price-block">
+            <div class="rh-price" id="price-btc"><span class="rh-skeleton"></span></div>
+            <div class="rh-change neutral" id="change-btc">Loading...</div>
+            <div class="rh-price-updated" id="updated-btc"></div>
+          </div>
+          <div class="rh-links">
+            <a class="rh-link" href="https://www.coingecko.com/en/coins/bitcoin" target="_blank"><span class="rh-link-dot" style="background:#8dc647;"></span>CoinGecko</a>
+            <a class="rh-link" href="https://coinmarketcap.com/currencies/bitcoin/" target="_blank"><span class="rh-link-dot" style="background:#2775ca;"></span>CoinMarketCap</a>
+            <a class="rh-link" href="https://bitcoin.org" target="_blank"><span class="rh-link-dot" style="background:#f7931a;"></span>bitcoin.org</a>
+          </div>
+        </div>
+      </div>
+      <hr class="rh-divider">
+      <div class="rh-contracts">
+        <div class="rh-section-label">Contract Addresses</div>
+        <div class="rh-contract-row"><span class="rh-network-badge">Native Asset</span><span class="rh-address">No contract address — BTC is the base layer asset of the Bitcoin network.</span></div>
+        <div class="rh-contract-row"><span class="rh-network-badge">Ethereum (WBTC)</span><span class="rh-address">0x2260fac5e5542a773aa44fbcfedf7c193bc2c599</span></div>
+        <div class="rh-contract-row"><span class="rh-network-badge">Solana (WBTC)</span><span class="rh-address">3NZ9JMVBmGAqocybic2c7LQCJScmgsAZ6vQqTDzcqmJh</span></div>
+      </div>
+      <hr class="rh-divider">
+      <div class="rh-section-label">Ask about this asset</div>
+      <div class="rh-questions" id="qs-btc"></div>
+    </div>
+
+    <!-- ETH -->
+    <div id="card-eth" class="rh-card">
+      <div class="rh-card-header">
+        <div class="rh-title-block">
+          <div class="rh-ticker">ETH</div>
+          <h2 class="rh-name">Ethereum</h2>
+          <div class="rh-tagline">The leading programmable blockchain — a global platform for decentralized applications, smart contracts, and tokenized assets.</div>
+        </div>
+        <div class="rh-right">
+          <div class="rh-price-block">
+            <div class="rh-price" id="price-eth"><span class="rh-skeleton"></span></div>
+            <div class="rh-change neutral" id="change-eth">Loading...</div>
+            <div class="rh-price-updated" id="updated-eth"></div>
+          </div>
+          <div class="rh-links">
+            <a class="rh-link" href="https://www.coingecko.com/en/coins/ethereum" target="_blank"><span class="rh-link-dot" style="background:#8dc647;"></span>CoinGecko</a>
+            <a class="rh-link" href="https://coinmarketcap.com/currencies/ethereum/" target="_blank"><span class="rh-link-dot" style="background:#2775ca;"></span>CoinMarketCap</a>
+            <a class="rh-link" href="https://ethereum.org" target="_blank"><span class="rh-link-dot" style="background:#627eea;"></span>ethereum.org</a>
+          </div>
+        </div>
+      </div>
+      <hr class="rh-divider">
+      <div class="rh-contracts">
+        <div class="rh-section-label">Contract Addresses</div>
+        <div class="rh-contract-row"><span class="rh-network-badge">Native Asset</span><span class="rh-address">No contract address — ETH is the base layer asset of the Ethereum network.</span></div>
+        <div class="rh-contract-row"><span class="rh-network-badge">Solana (WETH)</span><span class="rh-address">7vfCXTUXx5WJV5JADk17DUJ4ksgau7utNKj4b963voxs</span></div>
+      </div>
+      <hr class="rh-divider">
+      <div class="rh-section-label">Ask about this asset</div>
+      <div class="rh-questions" id="qs-eth"></div>
+    </div>
+
+    <!-- SOL -->
+    <div id="card-sol" class="rh-card">
+      <div class="rh-card-header">
+        <div class="rh-title-block">
+          <div class="rh-ticker">SOL</div>
+          <h2 class="rh-name">Solana</h2>
+          <div class="rh-tagline">A high-performance Layer 1 blockchain built for speed and low fees — the infrastructure of choice for consumer crypto, DeFi, and NFTs.</div>
+        </div>
+        <div class="rh-right">
+          <div class="rh-price-block">
+            <div class="rh-price" id="price-sol"><span class="rh-skeleton"></span></div>
+            <div class="rh-change neutral" id="change-sol">Loading...</div>
+            <div class="rh-price-updated" id="updated-sol"></div>
+          </div>
+          <div class="rh-links">
+            <a class="rh-link" href="https://www.coingecko.com/en/coins/solana" target="_blank"><span class="rh-link-dot" style="background:#8dc647;"></span>CoinGecko</a>
+            <a class="rh-link" href="https://coinmarketcap.com/currencies/solana/" target="_blank"><span class="rh-link-dot" style="background:#2775ca;"></span>CoinMarketCap</a>
+            <a class="rh-link" href="https://solana.com" target="_blank"><span class="rh-link-dot" style="background:#9945ff;"></span>solana.com</a>
+          </div>
+        </div>
+      </div>
+      <hr class="rh-divider">
+      <div class="rh-contracts">
+        <div class="rh-section-label">Contract Addresses</div>
+        <div class="rh-contract-row"><span class="rh-network-badge">Native Asset</span><span class="rh-address">No contract address — SOL is the base layer asset of the Solana network.</span></div>
+        <div class="rh-contract-row"><span class="rh-network-badge">Ethereum (Wormhole)</span><span class="rh-address">0xD31a59c85aE9D8edEFeC411D448f90841571b89c</span></div>
+      </div>
+      <hr class="rh-divider">
+      <div class="rh-section-label">Ask about this asset</div>
+      <div class="rh-questions" id="qs-sol"></div>
+    </div>
+
+    <!-- HYPE -->
+    <div id="card-hype" class="rh-card">
+      <div class="rh-card-header">
+        <div class="rh-title-block">
+          <div class="rh-ticker">HYPE</div>
+          <h2 class="rh-name">Hyperliquid</h2>
+          <div class="rh-tagline">The native token of Hyperliquid — a fully on-chain perpetuals exchange with its own L1 blockchain, built for professional-grade trading at decentralized speeds.</div>
+        </div>
+        <div class="rh-right">
+          <div class="rh-price-block">
+            <div class="rh-price" id="price-hype"><span class="rh-skeleton"></span></div>
+            <div class="rh-change neutral" id="change-hype">Loading...</div>
+            <div class="rh-price-updated" id="updated-hype"></div>
+          </div>
+          <div class="rh-links">
+            <a class="rh-link" href="https://www.coingecko.com/en/coins/hyperliquid" target="_blank"><span class="rh-link-dot" style="background:#8dc647;"></span>CoinGecko</a>
+            <a class="rh-link" href="https://coinmarketcap.com/currencies/hyperliquid/" target="_blank"><span class="rh-link-dot" style="background:#2775ca;"></span>CoinMarketCap</a>
+            <a class="rh-link" href="https://hyperliquid.xyz" target="_blank"><span class="rh-link-dot" style="background:#00c2ff;"></span>hyperliquid.xyz</a>
+          </div>
+        </div>
+      </div>
+      <hr class="rh-divider">
+      <div class="rh-contracts">
+        <div class="rh-section-label">Contract Addresses</div>
+        <div class="rh-contract-row"><span class="rh-network-badge">Hyperliquid L1</span><span class="rh-address">Native asset of the Hyperliquid L1 — no EVM contract address.</span></div>
+        <div class="rh-contract-row"><span class="rh-network-badge">Arbitrum (bridged)</span><span class="rh-address">0x1eDD6e52C85d5fE3abb1af9e7b5F5B7c9B4B6b3A</span></div>
+      </div>
+      <hr class="rh-divider">
+      <div class="rh-section-label">Ask about this asset</div>
+      <div class="rh-questions" id="qs-hype"></div>
+    </div>
+
+    <div class="rh-disclaimer">
+      Prices sourced from CoinGecko. For informational purposes only. Not financial advice.<br>
+      Always consult your advisor before making investment decisions.
+    </div>
+
+  </div>
+
+  <script>
+    const assets = {
+      btc: {
+        name: 'Bitcoin', ticker: 'BTC', cgId: 'bitcoin',
+        answers: [
+          {
+            q: 'What is Bitcoin and why is it recommended?',
+            a: '<p>Bitcoin is the world\'s first and largest cryptocurrency by market value. It operates without any central bank or government — transactions are verified by a global network of computers and recorded permanently on a public ledger called the blockchain.</p><p>Our team recommends Bitcoin as a core holding because of its fixed supply of 21 million coins, its growing adoption as a store of value by institutions and sovereign wealth funds, and its track record as the highest-returning major asset class of the past decade. Think of it as digital gold — scarce, portable, and impossible to counterfeit.</p>'
+          },
+          {
+            q: 'What are the key risks?',
+            a: '<p>Bitcoin\'s price can be highly volatile in the short term — double-digit swings in a single week are not uncommon. It is also subject to regulatory changes in various countries, which can impact sentiment and access.</p><p>Custody risk is important to understand: if you hold Bitcoin directly and lose access to your private key, the funds cannot be recovered. This is why we recommend using reputable custodial services. There is also the risk that a competing technology eventually displaces it, though this risk has diminished significantly over time.</p>'
+          },
+          {
+            q: 'What are the current price targets?',
+            a: '<p><strong>Note:</strong> These figures reflect our team\'s published research and are subject to periodic updates. Always refer to the most recent version of our research note.</p><p>12-month base case: <strong>$150,000–$180,000</strong><br>Bull case: <strong>$250,000+</strong> (driven by continued ETF inflows and sovereign adoption)<br>Bear case: <strong>$55,000–$70,000</strong> (macro tightening or regulatory headwinds)</p><p>These are directional estimates, not guarantees. Past performance does not predict future results.</p>'
+          },
+          {
+            q: 'How much % of the portfolio should be in BTC?',
+            a: '<p>Our recommended allocation for BTC within your overall crypto portfolio is <strong>40–50%</strong>. As the most established and liquid digital asset, Bitcoin serves as the anchor of any crypto allocation.</p><p>Within the context of a total wealth portfolio, we generally suggest crypto represent no more than 5–15% of your total investable assets — your wealth advisor can help you determine the right percentage given your specific risk profile and tax situation.</p>'
+          }
+        ]
+      },
+      eth: {
+        name: 'Ethereum', ticker: 'ETH', cgId: 'ethereum',
+        answers: [
+          {
+            q: 'What is Ethereum and why is it recommended?',
+            a: '<p>Ethereum is a blockchain network that goes beyond just transferring money — it runs programs called smart contracts that automatically execute agreements without needing a bank, lawyer, or intermediary. The vast majority of decentralized finance (DeFi), NFTs, and tokenized real-world assets run on Ethereum.</p><p>We recommend Ethereum because it is the foundational infrastructure layer of the digital economy. Its network effects are deeply entrenched, it generates real fee revenue from usage, and it has transitioned to a more energy-efficient model. Owning ETH is similar to owning equity in the internet\'s most-used settlement network.</p>'
+          },
+          {
+            q: 'What are the key risks?',
+            a: '<p>Ethereum faces competition from faster, cheaper Layer 1 blockchains like Solana. While Ethereum remains dominant, it must continue executing on its technical roadmap to maintain its lead.</p><p>Regulatory uncertainty around whether ETH could be classified as a security in certain jurisdictions remains an ongoing concern. Additionally, Ethereum\'s fee revenue can decline during periods of low activity, which may weigh on its valuation. As with all crypto assets, price volatility is significant.</p>'
+          },
+          {
+            q: 'What are the current price targets?',
+            a: '<p><strong>Note:</strong> These figures reflect our team\'s published research and are subject to periodic updates.</p><p>12-month base case: <strong>$5,500–$7,000</strong><br>Bull case: <strong>$10,000+</strong> (ETF catalyst + DeFi institutional adoption)<br>Bear case: <strong>$2,000–$2,800</strong> (loss of developer mindshare, macro pressure)</p><p>These are directional estimates only. Please consult our full research note for context.</p>'
+          },
+          {
+            q: 'How much % of the portfolio should be in ETH?',
+            a: '<p>Our recommended allocation for ETH within your crypto portfolio is <strong>25–35%</strong>. It complements Bitcoin by offering exposure to the growth of on-chain activity and decentralized applications.</p><p>ETH carries more technological and competitive risk than BTC, which is reflected in a somewhat smaller weighting. That said, it remains a core conviction position given its dominant market position.</p>'
+          }
+        ]
+      },
+      sol: {
+        name: 'Solana', ticker: 'SOL', cgId: 'solana',
+        answers: [
+          {
+            q: 'What is Solana and why is it recommended?',
+            a: '<p>Solana is a high-speed blockchain capable of processing tens of thousands of transactions per second at a fraction of a cent per transaction. It has become the preferred blockchain for retail consumers, gaming applications, and high-frequency DeFi activity.</p><p>We recommend Solana because it has emerged as the clear #2 smart contract platform by usage metrics, with a rapidly growing developer ecosystem. The recent launch of spot Solana ETFs and increasing institutional interest make this an attractive growth position within a diversified crypto portfolio.</p>'
+          },
+          {
+            q: 'What are the key risks?',
+            a: '<p>Solana has experienced several network outages in its history, raising concerns about reliability under extreme load. While these have become less frequent, they remain a risk to its reputation as production-grade infrastructure.</p><p>It is a more speculative asset than BTC or ETH — its value is more dependent on continued ecosystem growth and developer adoption. It also faces ongoing competition from other high-performance L1s. Concentration risk is worth noting, as a significant portion of SOL tokens are held by early investors and the Solana Foundation.</p>'
+          },
+          {
+            q: 'What are the current price targets?',
+            a: '<p><strong>Note:</strong> These figures reflect our team\'s published research and are subject to periodic updates.</p><p>12-month base case: <strong>$280–$380</strong><br>Bull case: <strong>$500+</strong> (consumer crypto breakthrough, ETF inflows)<br>Bear case: <strong>$80–$120</strong> (network reliability issues, broad risk-off sentiment)</p><p>Solana carries higher upside and higher downside than BTC or ETH. Size accordingly.</p>'
+          },
+          {
+            q: 'How much % of the portfolio should be in SOL?',
+            a: '<p>Our recommended allocation for SOL within your crypto portfolio is <strong>10–20%</strong>. It is positioned as a higher-growth, higher-risk complement to your BTC and ETH core holdings.</p><p>Given its greater volatility, we suggest keeping SOL as a satellite position rather than a core holding. If you are more conservative, the lower end of this range is appropriate.</p>'
+          }
+        ]
+      },
+      hype: {
+        name: 'Hyperliquid', ticker: 'HYPE', cgId: 'hyperliquid',
+        answers: [
+          {
+            q: 'What is Hyperliquid and why is it recommended?',
+            a: '<p>Hyperliquid is a cryptocurrency exchange that operates entirely on its own blockchain — meaning all trades, order books, and settlements happen transparently on-chain, not on private servers. It specializes in perpetual futures and has attracted significant trading volume from professional traders.</p><p>We recommend HYPE as a high-conviction, higher-risk position. It is one of the few crypto projects generating substantial, verifiable revenue — fees collected by the exchange flow back to token holders and the ecosystem. Think of it as owning a stake in a fast-growing exchange business that runs without a traditional corporate structure.</p>'
+          },
+          {
+            q: 'What are the key risks?',
+            a: '<p>Hyperliquid is a newer and less battle-tested project than BTC, ETH, or SOL. Smart contract and technical risks are higher. It also operates in the highly competitive derivatives exchange market, competing with Binance, Bybit, and other established players.</p><p>Regulatory risk is particularly relevant here — on-chain perpetuals exchanges face scrutiny in multiple jurisdictions. Additionally, HYPE\'s value is tightly linked to trading volume, which can drop sharply during bear markets. This is a speculative position suited for clients comfortable with higher volatility.</p>'
+          },
+          {
+            q: 'What are the current price targets?',
+            a: '<p><strong>Note:</strong> These figures reflect our team\'s published research and are subject to periodic updates. HYPE is an early-stage asset; price estimates carry wider uncertainty than for BTC or ETH.</p><p>12-month base case: <strong>$45–$65</strong><br>Bull case: <strong>$100+</strong> (dominant on-chain derivatives market, token buybacks accelerate)<br>Bear case: <strong>$10–$18</strong> (regulatory action, volume collapse)</p>'
+          },
+          {
+            q: 'How much % of the portfolio should be in HYPE?',
+            a: '<p>Our recommended allocation for HYPE within your crypto portfolio is <strong>5–10%</strong> — this is our highest-risk, highest-potential-reward position and should be sized accordingly.</p><p>We do not recommend HYPE for clients with a conservative risk profile. For those with a higher risk tolerance and a longer time horizon, a small allocation can meaningfully enhance portfolio returns if the thesis plays out.</p>'
+          }
+        ]
+      }
+    };
+
+    function showAsset(id, tabEl) {
+      document.querySelectorAll('.rh-card').forEach(c => c.classList.remove('visible'));
+      document.querySelectorAll('.rh-tab').forEach(t => t.classList.remove('active'));
+      document.getElementById('card-' + id).classList.add('visible');
+      tabEl.classList.add('active');
+    }
+
+    function toggleQ(btn, answerId) {
+      const ans = document.getElementById(answerId);
+      const isOpen = btn.classList.contains('active');
+      const parent = btn.closest('.rh-questions');
+      parent.querySelectorAll('.rh-q-btn').forEach(b => b.classList.remove('active'));
+      parent.querySelectorAll('.rh-answer').forEach(a => a.classList.remove('visible'));
+      if (!isOpen) {
+        btn.classList.add('active');
+        ans.classList.add('visible');
+      }
+    }
+
+    Object.keys(assets).forEach(id => {
+      const asset = assets[id];
+      const container = document.getElementById('qs-' + id);
+      asset.answers.forEach((item, i) => {
+        const qId = `ans-${id}-${i}`;
+        const btn = document.createElement('button');
+        btn.className = 'rh-q-btn';
+        btn.innerHTML = `<span>${item.q}</span><span class="rh-q-arrow">›</span>`;
+        btn.onclick = () => toggleQ(btn, qId);
+        const ans = document.createElement('div');
+        ans.className = 'rh-answer';
+        ans.id = qId;
+        ans.innerHTML = item.a;
+        container.appendChild(btn);
+        container.appendChild(ans);
+      });
+    });
+
+    function formatPrice(usd) {
+      if (usd >= 1000) return '$' + usd.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      if (usd >= 1) return '$' + usd.toFixed(2);
+      return '$' + usd.toFixed(4);
+    }
+
+    function formatTime(d) {
+      return d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+    }
+
+    async function fetchPrices() {
+      const ids = Object.values(assets).map(a => a.cgId).join(',');
+      try {
+        const res = await fetch(
+          `https://api.coingecko.com/api/v3/simple/price?ids=${ids}&vs_currencies=usd&include_24hr_change=true`
+        );
+        if (!res.ok) throw new Error('API error');
+        const data = await res.json();
+        const now = new Date();
+        Object.keys(assets).forEach(id => {
+          const cgId = assets[id].cgId;
+          const d = data[cgId];
+          if (!d) return;
+          const priceEl = document.getElementById('price-' + id);
+          const changeEl = document.getElementById('change-' + id);
+          const updatedEl = document.getElementById('updated-' + id);
+          if (priceEl) priceEl.textContent = formatPrice(d.usd);
+          if (changeEl) {
+            const change = d.usd_24h_change;
+            const sign = change >= 0 ? '+' : '';
+            changeEl.textContent = `${sign}${change.toFixed(2)}% (24h)`;
+            changeEl.className = 'rh-change ' + (change > 0 ? 'up' : change < 0 ? 'down' : 'neutral');
+          }
+          if (updatedEl) updatedEl.textContent = 'Updated ' + formatTime(now);
+        });
+      } catch (e) {
+        Object.keys(assets).forEach(id => {
+          const priceEl = document.getElementById('price-' + id);
+          const changeEl = document.getElementById('change-' + id);
+          if (priceEl && priceEl.querySelector('.rh-skeleton')) priceEl.textContent = '—';
+          if (changeEl) {
+            changeEl.textContent = 'Price unavailable';
+            changeEl.className = 'rh-change neutral';
+          }
+        });
+      }
+    }
+
+    fetchPrices();
+    setInterval(fetchPrices, 60000);
+  </script>
+</body>
+</html>
